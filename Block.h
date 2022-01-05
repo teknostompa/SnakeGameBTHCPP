@@ -4,7 +4,7 @@
 
 class Block : public Shape {
 public:
-    Block(int x, int y, int w, sf::Color c) : x(x), y(y), width(w), color(c) {
+    Block(float x, float y, int w, sf::Color c) : x(x), y(y), width(w), color(c) {
         sf::RectangleShape temp(sf::Vector2f(w, w));
         shape = temp;
         shape.setFillColor(c);
@@ -38,6 +38,6 @@ public:
 private:
     sf::RectangleShape shape;
     sf::Color color;
-    int x,y;
+    float x,y;
     int width;
 };

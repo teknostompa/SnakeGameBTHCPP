@@ -11,14 +11,9 @@ enum class States {
 class GameState {
 public:
 
-    GameState(void) {
-
-    }
-
     void KeyEvent(sf::Keyboard::Key key);
     void tick();
     void Draw(sf::RenderWindow& window);
 
 private:
-    sf::Color color;
 };

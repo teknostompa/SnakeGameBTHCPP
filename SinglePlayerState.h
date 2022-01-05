@@ -7,7 +7,8 @@
 using std::vector; using std::string;
 class SinglePlayerState : public GameState {
 public:
-    SinglePlayerState(std::string settings) : setting(settings) {
+    SinglePlayerState(std::string settings, sf::Font font) : setting(settings) {
+        this->font = font;
         vector<vector<string>>setting = getSettingsFromString(settings);
         for (int i = 0; i < setting.size(); i++) {
             if (setting.at(i).at(0) == "Snake") {
@@ -38,33 +39,36 @@ public:
         snake.KeyEvent(key);
     }
 
-    void tick() {
-        snake.tick();
+    int tick() {
+        gameOver = snake.tick();
         if (food.tick(snake.GetBody()) == 1) {
-            score++;
+            score += 100;
             snake.addbody();
         }
+        if (gameOver) {
+            return score;
+        }
+        return 0;
+    }
+
+    void reset() {
+        food = Food(20, foodCol, 5, 5);
+        snake = Snake(snakeCol, 3, 20, steering);
+        score = 0;
     }
 
     void Draw(sf::RenderWindow& window) {
         window.draw(background);
         food.Draw(window);
         snake.Draw(window);
-
-        sf::Font font;
-        if (!font.loadFromFile("fonts/ARCADECLASSIC.TTF"))
-        {
-            // error... :(
-        }
-
         sf::Text text;
         std::string sco = "SCORE ";
         text.setString(sco += std::to_string(score));
         text.setCharacterSize(30);
         text.setFillColor(textCol);
         text.setFont(font);
-        text.setOrigin(200, 200);
-        text.setPosition(200, 200);
+        text.setOrigin(0, 0);
+        text.setPosition(10, 10);
         window.draw(text);
     }
 private:
@@ -79,7 +83,8 @@ private:
     int steering;
     const string hex = "0123456789ABCDEF";
     string setting;
-
+    sf::Font font;
+    int gameOver;
 
     vector<string> getSettingFromSubString(string settings) {
         vector<string> setting;
